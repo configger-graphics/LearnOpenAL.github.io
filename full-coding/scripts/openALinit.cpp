@@ -51,12 +51,12 @@ int main() {
 	unsigned int ABO;
 	alGenBuffers(1, &ABO);
 	if ((error = alGetError()) != AL_NO_ERROR) {
-    switch (error) {
-      case AL_INVALID_NAME: std::cout << "Invalid name\n"; break;
-      case AL_INVALID_ENUM: std::cout << "Invalid enum\n"; break;
-      case AL_INVALID_VALUE: std::cout << "Invalid value\n"; break;
-      case AL_INVALID_OPERATION: std::cout << "Invalid operation!\n"; break;
-      case AL_OUT_OF_MEMORY: std::cout << "Out of memory!\n"; break;
+    	switch (error) {
+      		case AL_INVALID_NAME: std::cout << "Invalid name\n"; break;
+      		case AL_INVALID_ENUM: std::cout << "Invalid enum\n"; break;
+      		case AL_INVALID_VALUE: std::cout << "Invalid value\n"; break;
+      		case AL_INVALID_OPERATION: std::cout << "Invalid operation!\n"; break;
+      		case AL_OUT_OF_MEMORY: std::cout << "Out of memory!\n"; break;
     }
     alDeleteBuffers(1, &ABO);
     return 1;
@@ -64,8 +64,30 @@ int main() {
 	unsigned int SBO;
 	alGenSources(1, &SBO);
 
-	alERR();
+	int NrChannels;
+	int sampleRate;
+	short* output;
+
+	int numSamples = stb_vorbis_decode_filename((char*)"", &NrChannels, &sampleRate, &output);
+	if (numSamples < 0) {
+		std::cout << "failed to decode OGG file\n";
+		alDeleteBuffers(1, &ABO);
+		alDeleteSources(1, &SBO);
+		return 1;
+	}
+	ALenum format;
+	if (NrChannels == 1) {
+		format = AL_FORMAT_MONO16;
+	} else if (NrChannels == 2) {
+		format = AL_FORMAT_STEREO16;
+	} else {
+		std::cout << "too many, not supported.\n";
+		alDeleteBuffers(1, &ABO);
+		alDeleteSources(1, &SBO);
+		return 1;
+	}
 	
 	alSourcei(SBO, AL_BUFFER, (ALuint)ABO);
+	// some looping code I'll add in later for listeners positon and source position
   return 0;
 }
