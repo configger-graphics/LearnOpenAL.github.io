@@ -85,12 +85,27 @@ int main() {
 		return 1;
 	}
 	
-	alSourcei(SBO, AL_BUFFER, (ALuint)ABO);
-
+	alSourcei(SBO, AL_BUFFER, (ALint)ABO); // why convert it to an ALint? that is because this function (alSourcei) accepts negatives for other AL_stuff.
+	glm::mat4 SBOLoc = glm::mat4(1.0f);
+	SBOLoc = glm::translate(SBOLoc, glm::vec3(0.0f, 0.0f, 0.0f));
+	alSourcefv(SBO, AL_POSITION, SBOLoc);
+	alSource3f(SBO, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+	alSource3f(SBO, AL_DIRECTION, 0.0f, 0.0f, 0.0f);
+	OrientationArray = {camPos.x, camPos.y, camPos.z, camUp.x, camUp.y, camUp.z};
 	LOAL::someBindingAbstraction(); // assuming you know what this does. If you don't, it just binds a cube, that's all.
-
 	while (!glfwWindowShouldClose(window)) {
-		// add to it later
+		glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
+		LOAL::processInput(window);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glm::mat4 projection = glm::perspective(glm::radians(LOAL::fov), (float)800 / (float)600, 0.1f, 100.0f);
+		glm::mat4 view = glm::lookAt(LOAL::camPos, LOAL::camPos + LOAL::camFront, LOAL::camUp);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		LOAL::uniformAbstraction(model, view, projection);
+		alListenerfv(AL_POSITION, model);
+		alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+		alListenerfv(AL_ORIENTATION, OrientationArray);
+		LOAL::drawingAbstraction();
 	} 
 	Context=alcGetCurrentContext();
 	Device=alcGetContextsDevice(Context);
