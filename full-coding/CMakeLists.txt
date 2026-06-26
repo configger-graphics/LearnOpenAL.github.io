@@ -20,6 +20,7 @@ target_include_directories(${PROJECT_NAME}
   external/glad/include # same thing for this library
   external/stb_vorbis # you get the point
   external/glm
+  external
 )
 
 target_link_directories(${PROJECT_NAME}
