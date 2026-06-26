@@ -31,10 +31,8 @@ int main() {
             return -1;
   }
 
-  glViewport(0, 0, 800, 600);
+ 	glViewport(0, 0, 800, 600);
 	
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  
 	glEnable(GL_DEPTH_TEST);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -89,6 +87,7 @@ int main() {
 	
 	alSourcei(SBO, AL_BUFFER, (ALuint)ABO);
 
+	
   
   return 0;
 }
