@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(OpenAL REQUIRED)
 
 add_executable(${PROJECT_NAME}
   external/glad/src/glad.c
@@ -17,15 +18,20 @@ add_executable(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME}
-  external/openal-soft/include # isn't included inside this folder so you must add it yourself
   external/glad/include # same thing for this library
   external/stb_vorbis # you get the point
   external/glm
   external
 )
 
+# If you have pacman (which is what I have on UCRT64 MSYS2) type these:
+# pacman -S mingw-w64-ucrt-x86_64-openal # For MSYS2
+# sudo pacman -S openal # For Arch/Manjaro Linux
+# The equivalent if not mentioned can be searched up by google
+
 target_link_directories(${PROJECT_NAME}
   PRIVATE
+  OpenAL::OpenAL
   glfw
   OpenGL::GL
 )
