@@ -14,12 +14,12 @@ find_package(OpenAL REQUIRED)
 
 add_executable(${PROJECT_NAME}
   external/glad/src/glad.c
+  external/stb_vorbis.c
   scripts/openALinit.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
-  external/glad/include # same thing for this library
-  external/stb_vorbis # you get the point
+  external/glad/include # all the information are in text inside external folder
   external/glm
   external
 )
